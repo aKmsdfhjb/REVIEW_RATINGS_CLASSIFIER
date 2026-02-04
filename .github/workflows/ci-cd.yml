@@ -62,7 +62,7 @@ jobs:
       - name: Build Deployment Artifacts
         run: |
           mkdir -p release
-          cp svm_sentiment_svm_model.pkl sentiment_analysis_model.pkl data.csv release/
+          cp Model/svm_sentiment_svm_model.pkl Model/sentiment_analysis_model.pkl data.csv release/
           echo "Production artifacts prepared."
 
       - name: Upload Artifacts
