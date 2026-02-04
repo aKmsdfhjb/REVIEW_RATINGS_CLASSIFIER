@@ -1,0 +1,72 @@
+name: Review Ratings Classifier CI/CD
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main, dev ]
+
+jobs:
+  # CI Job: Checks code quality and model integrity
+  ci-pipeline:
+    name: Continuous Integration
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install black flake8 isort pytest joblib scikit-learn pandas numpy
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Linting & Formatting
+        run: |
+          black --check .
+          isort --check-only .
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+
+      - name: ML Model Sanity Check
+        # Verifies the .pkl file loads and predicts correctly
+        run: |
+          python -c "
+          import joblib
+          import pandas as pd
+          try:
+              model = joblib.load('svm_sentiment_svm_model.pkl')
+              test_data = pd.DataFrame({'Review': ['Excellent service!'], 'Ratings': [5]})
+              prediction = model.predict(test_data)
+              print(f'Sanity Check Passed. Prediction: {prediction}')
+          except Exception as e:
+              print(f'Model Verification Failed: {e}')
+              exit(1)
+          "
+
+  # CD Job: Prepares artifacts for production
+  cd-pipeline:
+    name: Continuous Deployment
+    needs: ci-pipeline
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Build Deployment Artifacts
+        run: |
+          mkdir -p release
+          cp svm_sentiment_svm_model.pkl sentiment_analysis_model.pkl data.csv release/
+          echo "Production artifacts prepared."
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-model-package
+          path: release/
