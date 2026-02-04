@@ -40,7 +40,7 @@ jobs:
           import joblib
           import pandas as pd
           try:
-              model = joblib.load('svm_sentiment_svm_model.pkl')
+              model = joblib.load('Model/svm_sentiment_svm_model.pkl')
               test_data = pd.DataFrame({'Review': ['Excellent service!'], 'Ratings': [5]})
               prediction = model.predict(test_data)
               print(f'Sanity Check Passed. Prediction: {prediction}')
