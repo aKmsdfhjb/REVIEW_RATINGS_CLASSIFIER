@@ -27,6 +27,9 @@ jobs:
           pip install black flake8 isort pytest joblib scikit-learn pandas numpy
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
+      - name: Black formatting diff
+        run: black --diff app.py || true
+
       - name: Linting & Formatting
         run: |
           black --check .
