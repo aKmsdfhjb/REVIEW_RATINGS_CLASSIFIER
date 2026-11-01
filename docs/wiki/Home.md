@@ -14,7 +14,7 @@ Check `/health` before sending prediction requests. Use Python 3.10+ and compati
 ## Key repository references
 
 - [Source repository](https://github.com/aKmsdfhjb/REVIEW_RATINGS_CLASSIFIER)
-- [README](../../README.md)
+- [README](https://github.com/aKmsdfhjb/REVIEW_RATINGS_CLASSIFIER#readme)
 - [Architecture](Architecture.md)
 
 ## Scope and limitations
