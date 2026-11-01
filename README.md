@@ -73,3 +73,11 @@ Model quality depends on the training data, label balance and the exact preproce
 ## License
 
 MIT — see LICENSE.
+
+
+## Project Wiki
+
+- [Wiki home](docs/wiki/Home.md)
+- [Architecture and deployment](docs/wiki/Architecture.md)
+
+The repository keeps a version-controlled wiki source under `docs/wiki/`.
