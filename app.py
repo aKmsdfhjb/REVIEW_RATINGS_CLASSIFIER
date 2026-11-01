@@ -70,9 +70,10 @@ def predict():
     if model_name not in MODEL_FILES:
         return jsonify({"error": "Choose either the ensemble or SVM model."}), 400
     if model_name not in models:
-        return jsonify(
-            {"error": model_errors.get(model_name, "Model unavailable.")}
-        ), 503
+        return (
+            jsonify({"error": model_errors.get(model_name, "Model unavailable.")}),
+            503,
+        )
 
     try:
         model = models[model_name]
@@ -80,13 +81,9 @@ def predict():
             try:
                 numeric_rating = float(rating)
             except (TypeError, ValueError):
-                return jsonify(
-                    {"error": "Rating must be a number from 1 to 5."}
-                ), 400
+                return jsonify({"error": "Rating must be a number from 1 to 5."}), 400
             if not 1 <= numeric_rating <= 5:
-                return jsonify(
-                    {"error": "Rating must be between 1 and 5."}
-                ), 400
+                return jsonify({"error": "Rating must be between 1 and 5."}), 400
             sample = pd.DataFrame(
                 [{"Review": review.strip(), "Ratings": numeric_rating}]
             )
@@ -107,9 +104,10 @@ def predict():
         return jsonify(result)
     except Exception:
         app.logger.exception("Sentiment prediction failed")
-        return jsonify(
-            {"error": "The selected model could not process this review."}
-        ), 500
+        return (
+            jsonify({"error": "The selected model could not process this review."}),
+            500,
+        )
 
 
 load_models()
